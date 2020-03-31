@@ -47,5 +47,12 @@ module	busyctr(i_clk, i_reset, i_start_signal, o_busy);
             assert(counter == $past(counter) - 1);
     end
 
+    always @(posedge i_clk) begin
+        cover(o_busy);
+        // cover for abstract counter
+        if(f_past_valid)
+            cover($fell(o_busy));
+    end
+
 `endif
 endmodule
