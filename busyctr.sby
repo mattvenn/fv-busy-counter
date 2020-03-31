@@ -1,0 +1,18 @@
+[tasks]
+cover
+prove
+
+[options]
+prove:mode bmc
+cover:mode cover
+
+[engines]
+smtbmc
+
+[script]
+read -formal busyctr.v
+prep -top busyctr
+opt -share_all
+
+[files]
+busyctr.v
