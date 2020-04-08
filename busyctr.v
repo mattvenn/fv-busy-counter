@@ -27,18 +27,18 @@ module	busyctr(i_clk, i_reset, i_start_signal, o_busy);
     always @(posedge i_clk) 
         f_past_valid <= 1;
 
-//	1. Assume that once raised, i_start_signal will remain high until it
-//		is both high and the counter is no longer busy.
-//		Following (i_start_signal)&&(!o_busy), i_start_signal is no
-//		longer constrained--until it is raised again.
+    //	1. Assume that once raised, i_start_signal will remain high until it
+    //		is both high and the counter is no longer busy.
+    //		Following (i_start_signal)&&(!o_busy), i_start_signal is no
+    //		longer constrained--until it is raised again.
     always @(posedge i_clk) begin
         if(f_past_valid && $past(i_start_signal) && o_busy)
             assume(i_start_signal);
     end
 
-// #1, To Prove:
-//	2. o_busy will *always* be true any time the counter is non-zero.
-//	3. If the counter is non-zero, it should always be counting down
+    // #1, To Prove:
+    //	2. o_busy will *always* be true any time the counter is non-zero.
+    //	3. If the counter is non-zero, it should always be counting down
     always @(posedge i_clk) begin
         assume(!i_reset);
         if(counter)
