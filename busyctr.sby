@@ -3,16 +3,16 @@ cover
 prove
 
 [options]
-prove:mode bmc
+prove:mode prove
 cover:mode cover
 
 [engines]
 smtbmc
 
 [script]
+read -verific
 read -formal busyctr.v
 prep -top busyctr
-opt -share_all
 
 [files]
 busyctr.v

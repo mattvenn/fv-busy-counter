@@ -2,12 +2,13 @@
 // See LICENSE for more details.
 `default_nettype	none
 module	busyctr(i_clk, i_reset, i_start_signal, o_busy);
-	parameter	[15:0]	MAX_AMOUNT = 22;
+	parameter	[15:0]	MAX_AMOUNT = 1000;
 	input	wire	i_clk, i_reset;
 	input	wire	i_start_signal;
 	output	reg	o_busy;
 
 	reg	[15:0]	counter;
+    (* anyseq *) wire [7:0]   increment;
 
 	initial	counter = 0;
 	always @(posedge i_clk)
@@ -16,7 +17,7 @@ module	busyctr(i_clk, i_reset, i_start_signal, o_busy);
 		else if ((i_start_signal)&&(counter == 0))
 			counter <= MAX_AMOUNT-1'b1;
 		else if (counter != 0)
-			counter <= counter - 1'b1;
+			counter <= counter - increment;
 
 	always @(*)
 		o_busy <= (counter != 0);
@@ -44,12 +45,18 @@ module	busyctr(i_clk, i_reset, i_start_signal, o_busy);
         if(counter)
             assert(o_busy);
         if(counter && f_past_valid && counter != MAX_AMOUNT - 1)
-            assert(counter == $past(counter) - 1);
+            assert(counter < $past(counter));
     end
 
+    // assumes for the abstract counter
     always @(posedge i_clk) begin
-        cover(o_busy);
-        // cover for abstract counter
+        assume(increment > 0);
+        if(o_busy)
+            assume(increment <= counter);
+    end
+
+    // cover for abstract counter
+    always @(posedge i_clk) begin
         if(f_past_valid)
             cover($fell(o_busy));
     end
