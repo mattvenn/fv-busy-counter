@@ -2,7 +2,7 @@
 // See LICENSE for more details.
 `default_nettype	none
 module	busyctr(i_clk, i_reset, i_start_signal, o_busy);
-	parameter	[15:0]	MAX_AMOUNT = 22;
+	parameter	[15:0]	MAX_AMOUNT = 1000;
 	input	wire	i_clk, i_reset;
 	input	wire	i_start_signal;
 	output	reg	o_busy;
@@ -46,6 +46,8 @@ module	busyctr(i_clk, i_reset, i_start_signal, o_busy);
         if(counter && f_past_valid && counter != MAX_AMOUNT - 1)
             assert(counter == $past(counter) - 1);
     end
+
+    // cover o_busy falling
 
 `endif
 endmodule

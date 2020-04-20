@@ -3,7 +3,7 @@ cover
 prove
 
 [options]
-prove:mode bmc
+prove:mode prove
 cover:mode cover
 
 [engines]
